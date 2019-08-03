@@ -14,6 +14,8 @@ export class BeerListItem extends PolymerElement {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.sortTaskList = this.sortTaskList.bind(this);
   }
 
   handleClick() {
@@ -205,10 +207,20 @@ export class BeerListItem extends PolymerElement {
           <paper-input
             id="search"
             label="Enter search"
-            on-input="_inputChange"
+            on-input="inputChange"
           ></paper-input>
-
-          <template is="dom-repeat" items="{{tasks}}" as="task">
+          <div>Current search: [[filterText]]</div>
+          <paper-checkbox class="blue">
+          </paper-checkbox>
+        
+          <template
+            id="taskList"
+            is="dom-repeat"
+            items="{{tasks}}"
+            as="task"
+            filter="taskFilter"
+            sort="sortTask"
+          >
             <div class="todo">
               <paper-checkbox class="blue" checked="{{task.completed}}">
               </paper-checkbox>
@@ -227,6 +239,14 @@ export class BeerListItem extends PolymerElement {
       </iron-pages>
     `;
   }
+  inputChange() {
+    this.filterText = this.$.search.value;
+    this.$.taskList.render();
+  }
+
+  taskFilter(task) {
+    return task.name.match(new RegExp(this.filterText, "i"));
+  }
 
   isNotCompleted(tasks) {
     return !tasks.completed;
@@ -234,6 +254,18 @@ export class BeerListItem extends PolymerElement {
 
   isCompleted(tasks) {
     return tasks.completed;
+  }
+
+  sortTaskList() {
+    this.$.taskList.render();
+  }
+
+  sortTask(a, b) {
+    let invert= 1;
+
+    if (a.name === b.name) return 0;
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
   }
 
   static get properties() {
@@ -249,6 +281,10 @@ export class BeerListItem extends PolymerElement {
       tasks: {
         type: Array,
         value: () => []
+      },
+      filterText: {
+        type: String,
+        value: "null"
       }
     };
   }
