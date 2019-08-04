@@ -12,7 +12,7 @@ import "@polymer/iron-ajax/iron-ajax.js";
 import "@polymer/iron-icons/iron-icons.js";
 import "@polymer/paper-fab/paper-fab.js";
 
-export class BeerListItem extends PolymerElement {
+export class ToDoList extends PolymerElement {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
@@ -34,7 +34,6 @@ export class BeerListItem extends PolymerElement {
           display: flex;
           align-items: center;
           margin-left: 40%;
-          margin-top: 5%;
           position:relative;
         }
         paper-button.custom {
@@ -63,7 +62,7 @@ export class BeerListItem extends PolymerElement {
             color: white !important;
           }
           margin-left: 50%;
-          margin-top: 5%;import '@polymer/paper-fab/paper-fab.js';
+         import '@polymer/paper-fab/paper-fab.js';
 
         }
 
@@ -187,12 +186,11 @@ export class BeerListItem extends PolymerElement {
           top: 24%;
           left: 39%;
         }
-      </style>
 
-      <div class="header">
-        <iron-icon icon="assignment"></iron-icon>
-        <h1>To Do App</h1>
-      </div>
+        iron-pages{
+          margin: 10px 0;
+        }
+      </style>
 
       <div class="header">
         <h2>[[name]]</h2>
@@ -235,6 +233,11 @@ export class BeerListItem extends PolymerElement {
                 always-float-label
               >
               </paper-input>
+              <paper-fab
+                icon="delete"
+                on-click="deleteTask"
+                args="[[tasks]]"
+              ></paper-fab>
             </div>
           </template>
 
@@ -262,7 +265,6 @@ export class BeerListItem extends PolymerElement {
                 value="{{task.name}}"
                 always-float-label
               >
-        
               </paper-input>
               <paper-fab
                 icon="delete"
@@ -279,7 +281,6 @@ export class BeerListItem extends PolymerElement {
             label="Enter search"
             on-input="inputChange"
           ></paper-input>
-      
 
           <template
             id="taskList"
@@ -287,7 +288,6 @@ export class BeerListItem extends PolymerElement {
             items="{{tasks}}"
             as="task"
             filter="taskFilter"
-            sort="sortTask"
           >
             <div class="todo">
               <paper-checkbox class="blue" checked="{{task.completed}}">
@@ -301,10 +301,19 @@ export class BeerListItem extends PolymerElement {
                 always-float-label
               >
               </paper-input>
+              <paper-fab
+              icon="delete"
+              on-click="deleteTask"
+              args="[[tasks]]"
+            ></paper-fab>
             </div>
           </template>
         </div>
       </iron-pages>
+      <paper-fab
+      icon="delete"
+      on-click="deleteAllTask"
+    ></paper-fab>
     `;
   }
   inputChange() {
@@ -324,11 +333,11 @@ export class BeerListItem extends PolymerElement {
     return tasks.completed;
   }
 
-
-  sortTask(a, b) {    
-    if (a.name === b.name) return 0;
-    if (a.name < b.name) return -1;
-    if (a.name > b.name) return 1;
+  deleteAllTask(){
+    let y = this.tasks.length;
+    for(let i=0; i<y;i++){
+      this.pop("tasks")
+    }
   }
 
   deleteTask(e) {
@@ -356,7 +365,7 @@ export class BeerListItem extends PolymerElement {
         type: Array,
         value: () => []
       },
-     
+
       filterText: {
         type: String,
         value: ""
@@ -366,4 +375,4 @@ export class BeerListItem extends PolymerElement {
 }
 
 // Associate the new class with an element name
-customElements.define("beer-list-item", BeerListItem);
+customElements.define("todo-list", ToDoList);
