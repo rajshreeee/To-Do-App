@@ -17,7 +17,6 @@ export class BeerListItem extends PolymerElement {
     super();
     this.handleClick = this.handleClick.bind(this);
     this.inputChange = this.inputChange.bind(this);
-    this.sortTaskList = this.sortTaskList.bind(this);
   }
 
   handleClick() {
@@ -85,9 +84,14 @@ export class BeerListItem extends PolymerElement {
           border: 1px solid rgb(0, 188, 212);
         }
 
+        #search{
+          width:400px;
+          margin-left:30%;
+        }
+
         paper-input.custom {
           margin-bottom: 14px;
-          --primary-text-color: #01579b;
+          --primary-text-color: black;
           --paper-input-container-color: black;
           --paper-input-container-focus-color: black;
           --paper-input-container-invalid-color: black;
@@ -258,9 +262,13 @@ export class BeerListItem extends PolymerElement {
                 value="{{task.name}}"
                 always-float-label
               >
+        
               </paper-input>
-              <paper-fab icon="delete" on-click="deleteTask" args="[[tasks]]"></paper-fab>
-
+              <paper-fab
+                icon="delete"
+                on-click="deleteTask"
+                args="[[tasks]]"
+              ></paper-fab>
             </div>
           </template>
         </div>
@@ -271,8 +279,7 @@ export class BeerListItem extends PolymerElement {
             label="Enter search"
             on-input="inputChange"
           ></paper-input>
-          <div>Current search: [[filterText]]</div>
-          <paper-checkbox class="blue"> </paper-checkbox>
+      
 
           <template
             id="taskList"
@@ -294,23 +301,18 @@ export class BeerListItem extends PolymerElement {
                 always-float-label
               >
               </paper-input>
-
             </div>
           </template>
         </div>
       </iron-pages>
-
-      
     `;
   }
   inputChange() {
-    
     this.filterText = this.$.search.value;
     this.$.taskList.render();
   }
 
   taskFilter(task) {
-    
     return task.name.match(new RegExp(this.filterText, "i"));
   }
 
@@ -322,27 +324,22 @@ export class BeerListItem extends PolymerElement {
     return tasks.completed;
   }
 
-  sortTaskList() {
-    this.$.taskList.render();
-  }
 
-  sortTask(a, b) {
-    let invert = 1;
-
+  sortTask(a, b) {    
     if (a.name === b.name) return 0;
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
   }
 
   deleteTask(e) {
-    let name=e.model.get('task.name');
+    let name = e.model.get("task.name");
     let found = this.tasks.find(function(element) {
-      if(element.name === name){
+      if (element.name === name) {
         return element;
       }
     });
     let index = this.tasks.indexOf(found);
-    this.splice("tasks",index,1)
+    this.splice("tasks", index, 1);
   }
 
   static get properties() {
@@ -359,6 +356,7 @@ export class BeerListItem extends PolymerElement {
         type: Array,
         value: () => []
       },
+     
       filterText: {
         type: String,
         value: ""
