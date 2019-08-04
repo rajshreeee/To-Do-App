@@ -8,8 +8,10 @@ import "@polymer/paper-button/paper-button.js";
 import "@polymer/paper-tabs/paper-tabs.js";
 import "@polymer/paper-tabs/paper-tab.js";
 import "@polymer/iron-pages/iron-pages.js";
+import "@polymer/iron-ajax/iron-ajax.js";
+import "@polymer/iron-icons/iron-icons.js";
+import "@polymer/paper-fab/paper-fab.js";
 
-// Define the element's class element
 export class BeerListItem extends PolymerElement {
   constructor() {
     super();
@@ -25,13 +27,16 @@ export class BeerListItem extends PolymerElement {
     };
     this.push("tasks", newTask);
   }
+
   static get template() {
     return html`
       <style>
         .todo {
           display: flex;
           align-items: center;
-          margin-left: 30%;
+          margin-left: 40%;
+          margin-top: 5%;
+          position:relative;
         }
         paper-button.custom {
           margin-left: 45%;
@@ -50,27 +55,17 @@ export class BeerListItem extends PolymerElement {
         paper-button.custom:hover {
           background-color: var(--paper-indigo-100);
         }
-        paper-button.pink {
-          color: var(--paper-pink-a200);
-        }
+
         paper-button.indigo {
-          background-color: var(--paper-indigo-500);
+          background-color: rgb(0, 188, 212);
           color: white;
           --paper-button-raised-keyboard-focus: {
             background-color: var(--paper-pink-a200) !important;
             color: white !important;
           }
-        }
-        paper-button.green {
-          background-color: var(--paper-green-500);
-          color: white;
-        }
-        paper-button.green[active] {
-          background-color: var(--paper-red-500);
-        }
-        paper-button.disabled {
-          color: white;
-          background-color: bisque;
+          margin-left: 50%;
+          margin-top: 5%;import '@polymer/paper-fab/paper-fab.js';
+
         }
 
         h3 {
@@ -78,20 +73,16 @@ export class BeerListItem extends PolymerElement {
         }
 
         paper-checkbox.blue {
-          --paper-checkbox-checked-color: var(--paper-blue-500);
-          --paper-checkbox-checked-ink-color: var(--paper-blue-500);
-          --paper-checkbox-unchecked-color: var(--paper-blue-900);
-          --paper-checkbox-unchecked-ink-color: var(--paper-blue-900);
+          --paper-checkbox-checked-color: rgb(0, 188, 212);
+          --paper-checkbox-checked-ink-color: rgb(0, 188, 212);
+          --paper-checkbox-unchecked-color: rgb(0, 188, 212);
+          --paper-checkbox-unchecked-ink-color: rgb(0, 188, 212);
           --paper-checkbox-label-color: var(--paper-blue-700);
           --paper-checkbox-label-checked-color: var(--paper-blue-900);
         }
 
-        .custom-parent {
-          font-size: 12px;
-        }
-
         paper-input.custom:hover {
-          border: 1px solid #29b6f6;
+          border: 1px solid rgb(0, 188, 212);
         }
 
         paper-input.custom {
@@ -100,7 +91,7 @@ export class BeerListItem extends PolymerElement {
           --paper-input-container-color: black;
           --paper-input-container-focus-color: black;
           --paper-input-container-invalid-color: black;
-          border: 1px solid #bdbdbd;
+          border: 1px solid rgb(0, 188, 212);
           border-radius: 5px;
           width: 400px;
 
@@ -139,18 +130,88 @@ export class BeerListItem extends PolymerElement {
             width: auto;
           }
         }
+
+        paper-tab {
+          background-color: rgb(0, 188, 212);
+          color: white;
+          font-weight: bold;
+          position:relative;
+        }
+
+        .delete-icon{
+          fill: rgb(0, 188, 212);
+          stroke: rgb(0, 188, 212);
+          position:absolute;
+          top:50%;
+          left:40%;
+        }
+
+        .header {
+          background-color: rgb(0, 188, 212);
+          position: relative;
+        }
+
+        h1,
+        h2 {
+          font-family: Arial;
+          color: white;
+          font-weight: 100;
+          margin: 0;
+          padding: 20px;
+          text-align: center;
+        }
+
+        h1 {
+          font-size: 30px;
+        }
+        h2 {
+          font-size: 20px;
+        }
+
+        iron-icon {
+          fill: white;
+          stroke: white;
+          position: absolute;
+          top: 34%;
+          left: 44%;
+        }
+
+        .tab-icon{
+          fill: white;
+          stroke: white;
+          position: absolute;
+          top: 24%;
+          left: 39%;
+        }
       </style>
-      <h2>[[name]]</h2>
+
+      <div class="header">
+        <iron-icon icon="assignment"></iron-icon>
+        <h1>To Do App</h1>
+      </div>
+
+      <div class="header">
+        <h2>[[name]]</h2>
+      </div>
 
       <paper-tabs selected="{{selected}}">
-        <paper-tab>TO DO</paper-tab>
-        <paper-tab>COMPLETED</paper-tab>
-        <paper-tab>ALL</paper-tab>
+        <paper-tab>
+          <iron-icon class="tab-icon" icon="add-box"></iron-icon> TO
+          DO</paper-tab
+        >
+
+        <paper-tab
+          ><iron-icon class="tab-icon" icon="assignment-turned-in"></iron-icon>
+          COMPLETED</paper-tab
+        >
+
+        <paper-tab>
+          <iron-icon class="tab-icon" icon="folder"></iron-icon> ALL</paper-tab
+        >
       </paper-tabs>
 
       <iron-pages selected="{{selected}}">
         <div>
-          <h3>To Do</h3>
           <template
             is="dom-repeat"
             items="{{tasks}}"
@@ -179,7 +240,6 @@ export class BeerListItem extends PolymerElement {
         </div>
 
         <div>
-          <h3>Completed:</h3>
           <template
             is="dom-repeat"
             items="{{tasks}}"
@@ -199,6 +259,8 @@ export class BeerListItem extends PolymerElement {
                 always-float-label
               >
               </paper-input>
+              <paper-fab icon="delete" on-click="deleteTask" args="[[tasks]]"></paper-fab>
+
             </div>
           </template>
         </div>
@@ -210,9 +272,8 @@ export class BeerListItem extends PolymerElement {
             on-input="inputChange"
           ></paper-input>
           <div>Current search: [[filterText]]</div>
-          <paper-checkbox class="blue">
-          </paper-checkbox>
-        
+          <paper-checkbox class="blue"> </paper-checkbox>
+
           <template
             id="taskList"
             is="dom-repeat"
@@ -233,18 +294,23 @@ export class BeerListItem extends PolymerElement {
                 always-float-label
               >
               </paper-input>
+
             </div>
           </template>
         </div>
       </iron-pages>
+
+      
     `;
   }
   inputChange() {
+    
     this.filterText = this.$.search.value;
     this.$.taskList.render();
   }
 
   taskFilter(task) {
+    
     return task.name.match(new RegExp(this.filterText, "i"));
   }
 
@@ -261,11 +327,22 @@ export class BeerListItem extends PolymerElement {
   }
 
   sortTask(a, b) {
-    let invert= 1;
+    let invert = 1;
 
     if (a.name === b.name) return 0;
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
+  }
+
+  deleteTask(e) {
+    let name=e.model.get('task.name');
+    let found = this.tasks.find(function(element) {
+      if(element.name === name){
+        return element;
+      }
+    });
+    let index = this.tasks.indexOf(found);
+    this.splice("tasks",index,1)
   }
 
   static get properties() {
@@ -284,7 +361,7 @@ export class BeerListItem extends PolymerElement {
       },
       filterText: {
         type: String,
-        value: "null"
+        value: ""
       }
     };
   }
