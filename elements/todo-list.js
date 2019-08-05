@@ -8,7 +8,6 @@ import "@polymer/paper-button/paper-button.js";
 import "@polymer/paper-tabs/paper-tabs.js";
 import "@polymer/paper-tabs/paper-tab.js";
 import "@polymer/iron-pages/iron-pages.js";
-import "@polymer/iron-ajax/iron-ajax.js";
 import "@polymer/iron-icons/iron-icons.js";
 import "@polymer/paper-fab/paper-fab.js";
 
@@ -31,6 +30,7 @@ export class ToDoList extends PolymerElement {
   static get template() {
     return html`
       <style>
+      
         .todo {
           display: flex;
           align-items: center;
