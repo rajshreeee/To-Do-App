@@ -17,6 +17,7 @@ export class ToDoList extends PolymerElement {
     super();
     this.handleClick = this.handleClick.bind(this);
     this.inputChange = this.inputChange.bind(this);
+    this.invert = 1;
   }
 
   handleClick() {
@@ -282,12 +283,22 @@ export class ToDoList extends PolymerElement {
             on-input="inputChange"
           ></paper-input>
 
+          <paper-button raised on-click="sortInAscend"
+            >Sort In Ascending Order
+          </paper-button>
+
+          <paper-button raised on-click="sortInDescend"
+            >Sort In Descending Order
+          </paper-button>
+
           <template
             id="taskList"
             is="dom-repeat"
             items="{{tasks}}"
             as="task"
             filter="taskFilter"
+            sort="sortTask"
+            observe="name"
           >
             <div class="todo">
               <paper-checkbox class="blue" checked="{{task.completed}}">
@@ -302,18 +313,15 @@ export class ToDoList extends PolymerElement {
               >
               </paper-input>
               <paper-fab
-              icon="delete"
-              on-click="deleteTask"
-              args="[[tasks]]"
-            ></paper-fab>
+                icon="delete"
+                on-click="deleteTask"
+                args="[[tasks]]"
+              ></paper-fab>
             </div>
           </template>
         </div>
       </iron-pages>
-      <paper-fab
-      icon="delete"
-      on-click="deleteAllTask"
-    ></paper-fab>
+      <paper-fab icon="delete" on-click="deleteAllTask"></paper-fab>
     `;
   }
   inputChange() {
@@ -325,6 +333,28 @@ export class ToDoList extends PolymerElement {
     return task.name.match(new RegExp(this.filterText, "i"));
   }
 
+  sortInAscend() {
+    this.invert = 1;
+    this.$.taskList.render();
+  }
+
+  sortInDescend() {
+    this.invert = -1;
+    this.$.taskList.render();
+  }
+
+  sortTask(a, b) {
+    let name1 = a.name.toUpperCase();
+    let name2 = b.name.toUpperCase();
+    if (name1 < name2) {
+      return -1 * this.invert;
+    }
+    if (name1 === name2) {
+      return 0;
+    }
+    return 1 * this.invert;
+  }
+
   isNotCompleted(tasks) {
     return !tasks.completed;
   }
@@ -333,10 +363,10 @@ export class ToDoList extends PolymerElement {
     return tasks.completed;
   }
 
-  deleteAllTask(){
+  deleteAllTask() {
     let y = this.tasks.length;
-    for(let i=0; i<y;i++){
-      this.pop("tasks")
+    for (let i = 0; i < y; i++) {
+      this.pop("tasks");
     }
   }
 
