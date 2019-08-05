@@ -4,6 +4,6 @@ To Do App created using Polymer
 
 To run the app:
 
-##Step1: npm install
+Step1: npm install
 
-##Step2: polymer serve
+Step2: polymer serve
